@@ -14,11 +14,10 @@ class SembastRunner implements BenchmarkRunner {
     final s = Stopwatch()..start();
     var store = StoreRef<String, int>.main();
 
-    await _db.transaction((txn) async {
-      keys.forEach((key) async {
-        await store.record(key).delete(_db);
-      });
-    });
+    for (final key in keys) {
+      await store.record(key).delete(_db);
+    }
+    s.stop();
 
     return s.elapsedMilliseconds;
   }
@@ -28,31 +27,36 @@ class SembastRunner implements BenchmarkRunner {
     final s = Stopwatch()..start();
     var store = StoreRef<String, String>.main();
 
-    await _db.transaction((txn) async {
-      keys.forEach((key) async {
-        await store.record(key).delete(_db);
-      });
-    });
+    for (final key in keys) {
+      await store.record(key).delete(_db);
+    }
+    s.stop();
 
     return s.elapsedMilliseconds;
   }
 
   @override
   Future<int> batchReadInt(List<String> keys) async {
-    final s = Stopwatch()..start();
     var store = StoreRef<String, int>.main();
+    final s = Stopwatch()..start();
 
-    await store.records(keys).get(_db);
+    for (final key in keys) {
+      await store.record(key).get(_db);
+    }
+    s.stop();
 
     return s.elapsedMilliseconds;
   }
 
   @override
   Future<int> batchReadString(List<String> keys) async {
-    final s = Stopwatch()..start();
     var store = StoreRef<String, String>.main();
+    final s = Stopwatch()..start();
 
-    await store.records(keys).get(_db);
+    for (final key in keys) {
+      await store.record(key).get(_db);
+    }
+    s.stop();
 
     return s.elapsedMilliseconds;
   }
@@ -62,11 +66,10 @@ class SembastRunner implements BenchmarkRunner {
     final s = Stopwatch()..start();
     var store = StoreRef<String, int>.main();
 
-    await _db.transaction((txn) async {
-      entries.forEach((key, val) async {
-        await store.record(key).put(_db, val);
-      });
-    });
+    for (final key in entries.keys) {
+      await store.record(key).add(_db, entries[key]);
+    }
+    s.stop();
 
     return s.elapsedMilliseconds;
   }
@@ -76,11 +79,10 @@ class SembastRunner implements BenchmarkRunner {
     final s = Stopwatch()..start();
     var store = StoreRef<String, String>.main();
 
-    await _db.transaction((txn) async {
-      entries.forEach((key, val) async {
-        await store.record(key).put(_db, val);
-      });
-    });
+    for (final key in entries.keys) {
+      await store.record(key).add(_db, entries[key]);
+    }
+    s.stop();
 
     return s.elapsedMilliseconds;
   }
